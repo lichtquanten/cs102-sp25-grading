@@ -4,6 +4,8 @@
 
 This program processes grading data for CS102 - Spring 2025. The program reads CSV files containing student assessment data as exported from Zybooks, applies necessary transformations and calculations, and exports the results in a format compatible with Brightspace.
 
+You can download the CSV files from Zybooks by going to the `Assignments` tab and selecting `Report`. You need to download the report for one assignment at a time - not the Summary Report.
+
 ## Expected Input Files
 
 The program expects CSV files located in the `data/` directory. These files should be named according to the following pattern:
