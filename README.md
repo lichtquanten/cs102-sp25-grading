@@ -36,8 +36,9 @@ The output CSV file will include the following columns:
 
 - `Username`: The student ID.
 - `Homework #<index> - Zybooks Points Grade`: The score for a homework assignment, as shown in Zybooks.
-- `Homework #<index> - Late Penalty Points Grade`: The late penalty applied to a homework assignment, as a percentage. A penalty of 0 is given if the assignment is submitted before the due date. Penalties of 10, 20, and 30 are given if the assignment is submitted within 1 day, 2 days, and 3 days of the due date, respectively. A penalty of 100 is given if the assignment is submitted after the due date.
-- `Lab #<index> - On-Time Points Grade`: The score of whether or not a lab was submitted on time, with 100 if the lab is submitted before the due date and 0 otherwise.
+- `Lab #<index> - Zybooks Points Grade`: The score for a lab assignment, as shown in Zybooks.
+- `Homework #<index> - On-Time Points Grade`: A score for how on-time a homework assignment is given if the assignment is submitted before the deadline. Scores of .9, .8, and .7 are given for assignments submitted within 1, 2, and 3 days after the deadline, respectively. A score of 0 is given if the assignment is submitted more than 3 days after the deadline.
+- `Lab #<index> - On-Time Points Grade`: The score of whether or not a lab was submitted on time, with 1 if the lab is submitted before the deadline and 0 otherwise.
 - `End-of-Line Indicator`: A column with the value `#` to indicate the end of each line, as required by Brightspace.
 
 ## Running the Program

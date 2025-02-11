@@ -13,16 +13,15 @@ logging.basicConfig(
 )
 
 
-def extract_homework_late_penalties(
+def extract_homework_on_time_scores(
     zybooks_data: DataFrame[ZybooksAssessmentModel],
 ) -> DataFrame[AssessmentModel]:
     df = zybooks_data[["submission_date", "due_date"]].copy()
 
     days_late = (df["submission_date"] - df["due_date"]).dt.days
 
-    # If submission_date is NaT, assign 100 penalty; otherwise, compute late penalty
     df["score"] = np.where(
-        pd.isna(days_late) | (days_late > 3), 100, np.clip(days_late * 10, 0, 30)
+        pd.isna(days_late) | (days_late > 3), 0, 1 - np.clip(days_late * 0.1, 0, 0.3)
     )
 
     return df[["score"]]
@@ -35,8 +34,7 @@ def extract_lab_on_time_scores(
 
     days_late = (df["submission_date"] - df["due_date"]).dt.days
 
-    # If submission_date is NaT, give full credit (100); otherwise, check on-time status
-    df["score"] = np.where(pd.isna(days_late), 0, (days_late <= 0) * 100)
+    df["score"] = np.where(pd.isna(days_late), 0, (days_late <= 0) * 1)
 
     return df[["score"]]
 
@@ -47,7 +45,6 @@ class GradeProcessor:
     def __init__(self):
         self.assessments = []
         self.export: BrightspaceGradingModel = BrightspaceGradingModel.example(size=0)
-        print(self.export)
 
     def process_csv(self, file_path):
         """Process Zybooks' CSV files."""
@@ -57,13 +54,13 @@ class GradeProcessor:
 
         # Extract the assessment type and number from the filename
         if "Homework" in filename:
-            late_penalties = extract_homework_late_penalties(zybooks_data)
+            on_time_scores = extract_homework_on_time_scores(zybooks_data)
 
             self.export[f"Homework #{assessment_index} - Zybooks Points Grade"] = (
                 zybooks_data.score
             )
-            self.export[f"Homework #{assessment_index} - Late Penalty Points Grade"] = (
-                late_penalties.score
+            self.export[f"Homework #{assessment_index} - On-Time Points Grade"] = (
+                on_time_scores.score
             )
 
         elif "Lab" in filename:
