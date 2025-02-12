@@ -1,9 +1,9 @@
-from models import ZybooksAssessmentModel
-
 from datetime import datetime
 import pandas as pd
 from pandera.typing import DataFrame
 import pytz
+
+from models import ZybooksAssessmentModel
 
 # Define how to rename columns from raw CSVs
 COLUMN_MAPPING = {

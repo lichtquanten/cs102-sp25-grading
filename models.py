@@ -1,6 +1,6 @@
+from datetime import datetime
 import pandera as pa
 from pandera.typing import Index, Series
-from datetime import datetime
 
 
 class BrightspaceGradingModel(pa.DataFrameModel):
