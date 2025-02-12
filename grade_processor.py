@@ -19,10 +19,16 @@ def extract_homework_on_time_scores(
 ) -> DataFrame[AssessmentModel]:
     df = zybooks_data[["submission_date", "due_date"]].copy()
 
-    days_late = (df["submission_date"] - df["due_date"]).dt.days
+    df.due_date = df.due_date - pd.Timedelta(days=3)
+
+    days_late = pd.to_timedelta(
+        np.ceil((df.submission_date - df.due_date) / pd.Timedelta(days=1)), unit="D"
+    )
 
     df["score"] = np.where(
-        pd.isna(days_late) | (days_late > 3), 0, 1 - np.clip(days_late * 0.1, 0, 0.3)
+        pd.isna(days_late) | (days_late > pd.Timedelta(days=3)),
+        0,
+        1 - np.clip(days_late.dt.days * 0.1, 0, 0.3),
     )
 
     return df[["score"]]
