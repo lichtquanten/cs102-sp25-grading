@@ -14,7 +14,7 @@ logging.basicConfig(
 )
 
 
-def extract_homework_on_time_scores(
+def extract_on_time_scores(
     zybooks_data: DataFrame[ZybooksAssessmentModel],
 ) -> DataFrame[AssessmentModel]:
     df = zybooks_data[["submission_date", "due_date"]].copy()
@@ -34,18 +34,6 @@ def extract_homework_on_time_scores(
     return df[["score"]]
 
 
-def extract_lab_on_time_scores(
-    zybooks_data: DataFrame[ZybooksAssessmentModel],
-) -> DataFrame[AssessmentModel]:
-    df = zybooks_data[["submission_date", "due_date"]].copy()
-
-    days_late = (df["submission_date"] - df["due_date"]).dt.days
-
-    df["score"] = np.where(pd.isna(days_late), 0, (days_late <= 0) * 1)
-
-    return df[["score"]]
-
-
 class GradeProcessor:
     """Handles loading, processing, and exporting assessments."""
 
@@ -61,7 +49,7 @@ class GradeProcessor:
 
         # Extract the assessment type and number from the filename
         if "Homework" in filename:
-            on_time_scores = extract_homework_on_time_scores(zybooks_data)
+            on_time_scores = extract_on_time_scores(zybooks_data)
 
             self.export[f"Homework #{assessment_index} - Zybooks Points Grade"] = (
                 zybooks_data.score
@@ -71,7 +59,7 @@ class GradeProcessor:
             )
 
         elif "Lab" in filename:
-            on_time_scores = extract_lab_on_time_scores(zybooks_data)
+            on_time_scores = extract_on_time_scores(zybooks_data)
 
             self.export[f"Lab #{assessment_index} - Zybooks Points Grade"] = (
                 zybooks_data.score
